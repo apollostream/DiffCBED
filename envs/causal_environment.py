@@ -242,7 +242,7 @@ class CausalEnvironment(torch.utils.data.Dataset):
 
         mutated_graph = self.adjacency_matrix.copy()
         if self.binary_nodes:
-            mutated_graph[:, nodes.astype(np.bool)] = 0
+            mutated_graph[:, nodes.astype(bool)] = 0
         else:
             mutated_graph[:, nodes] = 0
 
