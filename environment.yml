@@ -2,6 +2,6 @@ name: diffcbed
 channels:
     - defaults
 dependencies:
-    - python=3.10
-    - r-essentials 
+    - python=3.10 
     - r-base
+    - r-essentials
