@@ -5,11 +5,11 @@ from itertools import product
 
 import haiku as hk
 import jax
+import tensorflow_probability.substrates.jax as tfp
 import jax.numpy as jnp
 import numpy as np
 import optax
 import pandas as pd
-import tensorflow_probability as tfp
 from bayes_opt import BayesianOptimization
 from jax import value_and_grad
 from jax.example_libraries import optimizers
@@ -187,11 +187,12 @@ class Policy(object):
                 rng_seq, batch_size, logits, tau=temperature
             )
         else:
-            dist = tfp.substrates.jax.distributions.RelaxedBernoulli(
+            tfd = tfp.distributions
+            dist = tfd.RelaxedBernoulli(
                 temperature=temperature, logits=logits
             )
             node_samples = dist.sample(seed=next(rng_seq), sample_shape=(batch_size,))
-            node_samples_hard = node_samples.round()
+            node_samples_hard = jnp.round(node_samples)
             node_samples_hard_grad = (
                 node_samples - jax.lax.stop_gradient(node_samples) + node_samples_hard
             )
@@ -234,11 +235,12 @@ class PolicyWithFixedValue(object):
                 rng_seq, batch_size, logits, tau=temperature
             )
         else:
-            dist = tfp.substrates.jax.distributions.RelaxedBernoulli(
+            tfd = tfp.distributions
+            dist = tfd.RelaxedBernoulli(
                 temperature=temperature, logits=logits
             )
             node_samples = dist.sample(seed=next(rng_seq), sample_shape=(batch_size,))
-            node_samples_hard = node_samples.round()
+            node_samples_hard = jnp.round(node_samples)
             node_samples_hard_grad = (
                 node_samples - jax.lax.stop_gradient(node_samples) + node_samples_hard
             )
